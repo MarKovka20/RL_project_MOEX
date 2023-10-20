@@ -3,25 +3,37 @@ from torch import nn
 
 class Traider(nn.Module):
 
-    def __init__(self, in_dim, out_dim, num_hidden_layers):
+    def __init__(self, 
+                 in_dim, 
+                 hidden_dim,
+                 out_dim, 
+                 num_hidden_layers,
+                 use_softmax = True,
+                 dropout = 0.5):
 
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(in_dim, in_dim * 2),
-            nn.Dropout1d(p=0.5),
+            nn.Linear(in_dim, hidden_dim),
+            nn.Dropout1d(p=dropout),
             nn.ReLU(),
             *[
                 nn.Sequential(
-                    nn.Linear(in_dim * 2, in_dim * 2),
-                    nn.Dropout1d(p=0.5),
-                    nn.ReLU()
+                    nn.Linear(hidden_dim, hidden_dim),
+                    nn.ReLU(),
+                    nn.Dropout1d(p=dropout)
                 )
             for _ in range(num_hidden_layers - 2)
             ],
-            nn.Linear(in_dim * 2, out_dim),
-            # nn.Softmax()
+            nn.Linear(hidden_dim, out_dim) 
         )
+
+        self.use_softmax = use_softmax
+        if use_softmax == True:
+            self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
 
-        return self.model(x)
+        out =  self.model(x)
+        if self.use_softmax:
+            out = self.softmax(out)
+        return out
