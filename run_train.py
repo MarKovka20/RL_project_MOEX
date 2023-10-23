@@ -30,19 +30,19 @@ parser.add_argument("--use_softmax", default=True, type=bool)
 parser.add_argument("--n_actions", default=2, type=int)
 parser.add_argument("--levels", default=40, type=int)
 parser.add_argument("--learning_rate", default=0.0001, type=float)
-parser.add_argument("--epochs_limit", default=50, type=int)
+parser.add_argument("--epochs_limit", default=30, type=int)
 parser.add_argument("--update_online_model_step", default=5, type=int)
-parser.add_argument("--update_target_model_step", default=250)
+parser.add_argument("--update_target_model_step", default=250, type=int)
 parser.add_argument("--epsilon", default=0.15, type=float)
-parser.add_argument("--transaction", default=100.0)
-parser.add_argument("--batch_size", default=64)
-parser.add_argument("--gamma", default=0.9)
-parser.add_argument("--memory_limit", default=10000)
-parser.add_argument("--train_data_path", default="data/train.data")
-parser.add_argument("--test_data_path", default="data/test.data")
-parser.add_argument("--save_path", default="traider.pt")
-parser.add_argument("--device", default="cuda:0")
-parser.add_argument("--seed", default=42)
+parser.add_argument("--transaction", default=100, type=float)
+parser.add_argument("--batch_size", default=64, type=int)
+parser.add_argument("--gamma", default=0.9, type=float)
+parser.add_argument("--memory_limit", default=10000, type=int)
+parser.add_argument("--train_data_path", default="data/train.data", type=str)
+parser.add_argument("--test_data_path", default="data/test.data", type=str)
+parser.add_argument("--save_path", default="traider.pt", type=str)
+parser.add_argument("--device", default="cuda:0", type=str)
+parser.add_argument("--seed", default=42, type=int)
 
 args = parser.parse_args()
 seed_everything(args.seed)
@@ -68,13 +68,10 @@ loss_fn = torch.nn.HuberLoss()
 
 optimizer = torch.optim.Adam(online_model.parameters(), lr=args.learning_rate)
 
-save_path = "traider__" + "__".join([f'{k}={v}' for k, v in args._get_kwargs()]) + '.pt'
+save_path = f"epsilon={args.epsilon}__seed={args.seed}"
 
-# args.save_path = "traider__" + "__".join([f'{k}={v}' for k, v in args._get_kwargs()]) + '.pt'
-print(args.save_path)
-model = torch.nn.Linear(1, 1)
-print(args.save_path)
-torch.save(model.state_dict(), args.save_path)
+args.save_path = "traider__" + save_path + ".pt"
+
 trainer = Trainer(
     train_environment=train_environment,
     test_environment=test_environment,
@@ -85,4 +82,4 @@ trainer = Trainer(
     cfg=args
 )
 
-# trainer.train()
+trainer.train()
