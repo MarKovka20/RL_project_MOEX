@@ -6,7 +6,7 @@ This project uses DQN algorithm with two models (online and target) and a buffer
 
 
 ## Data
-Raw and preprocessed data available here: https://disk.yandex.ru/d/je8NU-tu3nVpCQ
+Raw and preprocessed data available here: https://disk.yandex.ru/d/bHEs67EgCV2Gyw
 
 
 ## Code
