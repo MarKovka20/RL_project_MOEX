@@ -121,7 +121,6 @@ class Trainer:
         self.target_model.to(self.cfg.device)
         done = False
         state = self.test_environment.reset().astype(np.float32)
-        total_reward = 0
         rewards = []
         
         while not done:
