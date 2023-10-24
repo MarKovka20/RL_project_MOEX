@@ -10,6 +10,7 @@ Raw and preprocessed data as well as weights for pretrained models available her
 
 ## Code
 
+* Data preparation in [prepare_data.ipynb](/prepare_data.ipynb)
 * Gym like environment in [env.py](/env.py)
 * Model in [models.py](/models.py)
 * Trainer with training loop and logging in [trainer.py](/trainer.py)
